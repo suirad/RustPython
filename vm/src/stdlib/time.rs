@@ -258,7 +258,7 @@ mod decl {
         fn naive_or_local(self, vm: &VirtualMachine) -> PyResult<NaiveDateTime> {
             Ok(match self {
                 OptionalArg::Present(secs) => pyobj_to_date_time(secs, vm)?.naive_utc(),
-                OptionalArg::Missing => chrono::offset::Local::now().naive_local(),
+                OptionalArg::Missing => chrono::offset::Utc::now().naive_utc(), // Local::now().naive_local(),
             })
         }
 
@@ -274,7 +274,7 @@ mod decl {
         fn naive_or_local(self, vm: &VirtualMachine) -> PyResult<NaiveDateTime> {
             Ok(match self {
                 OptionalArg::Present(t) => t.to_date_time(vm)?,
-                OptionalArg::Missing => chrono::offset::Local::now().naive_local(),
+                OptionalArg::Missing => chrono::offset::Utc::now().naive_utc(),
             })
         }
     }
@@ -470,9 +470,9 @@ mod decl {
     #[pyclass(with(PyStructSequence))]
     impl PyStructTime {
         fn new(vm: &VirtualMachine, tm: NaiveDateTime, isdst: i32) -> Self {
-            let local_time = chrono::Local.from_local_datetime(&tm).unwrap();
-            let offset_seconds =
-                local_time.offset().local_minus_utc() + if isdst == 1 { 3600 } else { 0 };
+            let local_time = chrono::offset::Utc.from_local_datetime(&tm).unwrap(); //Local.from_local_datetime(&tm).unwrap();
+            //let offset_seconds =
+            //local_time.offset().local_minus_utc() + if isdst == 1 { 3600 } else { 0 };
             let tz_abbr = local_time.format("%Z").to_string();
 
             PyStructTime {
@@ -485,7 +485,8 @@ mod decl {
                 tm_wday: vm.ctx.new_int(tm.weekday().num_days_from_monday()).into(),
                 tm_yday: vm.ctx.new_int(tm.ordinal()).into(),
                 tm_isdst: vm.ctx.new_int(isdst).into(),
-                tm_gmtoff: vm.ctx.new_int(offset_seconds).into(),
+                //tm_gmtoff: vm.ctx.new_int(offset_seconds).into(), idk how to convert lol
+                tm_gmtoff: vm.ctx.new_int(0).into(),
                 tm_zone: vm.ctx.new_str(tz_abbr).into(),
             }
         }

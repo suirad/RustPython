@@ -24,7 +24,8 @@ ast = ["ruff_python_ast", "ruff_text_size", "ruff_source_file"]
 codegen = ["rustpython-codegen", "ast"]
 parser = ["ast"]
 serde = ["dep:serde"]
-wasmbind = ["chrono/wasmbind", "getrandom/wasm_js", "wasm-bindgen"]
+#wasmbind = ["chrono/wasmbind", "getrandom/wasm_js", "wasm-bindgen"]
+wasmbind = ["chrono/wasmbind", "wasm-bindgen"]
 
 [dependencies]
 rustpython-compiler = { workspace = true, optional = true }
@@ -51,7 +52,8 @@ bitflags = { workspace = true }
 bstr = { workspace = true }
 cfg-if = { workspace = true }
 crossbeam-utils = { workspace = true }
-chrono = { workspace = true, features = ["wasmbind"] }
+#chrono = { workspace = true, features = ["wasmbind"] }
+chrono = { workspace = true, features = [] }
 constant_time_eq = { workspace = true }
 flame = { workspace = true, optional = true }
 getrandom = { workspace = true }
@@ -156,7 +158,8 @@ features = [
 
 [target.'cfg(all(target_arch = "wasm32", target_os = "unknown"))'.dependencies]
 wasm-bindgen = { workspace = true, optional = true }
-getrandom = { workspace = true }
+#getrandom = { workspace = true }
+getrandom = { workspace = true, features = ["custom"] }
 
 [build-dependencies]
 glob = { workspace = true }

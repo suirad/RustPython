@@ -1,6 +1,6 @@
 //! Several function to retrieve version information.
 
-use chrono::{Local, prelude::DateTime};
+use chrono::{Utc, prelude::DateTime};
 use std::time::{Duration, UNIX_EPOCH};
 
 // = 3.13.0alpha
@@ -80,7 +80,7 @@ pub fn get_git_identifier() -> String {
     }
 }
 
-fn get_git_timestamp_datetime() -> DateTime<Local> {
+fn get_git_timestamp_datetime() -> DateTime<Utc> {
     let timestamp = option_env!("RUSTPYTHON_GIT_TIMESTAMP")
         .unwrap_or("")
         .to_owned();
